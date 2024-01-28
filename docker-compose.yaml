@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: flight-search-postgres
+    environment:
+      POSTGRES_DB: amadeus
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+
+  flyway:
+    image: flyway/flyway:latest
+    container_name: flight-search-flyway
+    depends_on:
+      - postgres
+    volumes:
+      - ./flyway/sql:/flyway/sql
+    environment:
+      FLYWAY_URL: jdbc:postgresql://postgres:5432/amadeus
+      FLYWAY_USER: postgres
+      FLYWAY_PASSWORD: postgres
+      FLYWAY_SCHEMAS: public
+      FLYWAY_PLACEHOLDERS_SCHEMA: public
+      FLYWAY_PLACEHOLDERS_CITY: istanbul 
